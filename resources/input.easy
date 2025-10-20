@@ -1,0 +1,10 @@
+programa
+
+  numero x;
+  leia(x);
+  enquanto(x<5)
+  {
+   leia(x);
+  }
+  
+fimprog;
