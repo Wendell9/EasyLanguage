@@ -178,13 +178,9 @@ cmdselecao  :  'se' AP
                    )?
             ;
 
-cmdEnquanto : 'enquanto'
-                AP                             // Abre Parêntese (
-                ID                             { _exprDecision = _input.LT(-1).getText(); }
-                OPREL                          { _exprDecision += _input.LT(-1).getText(); }
-                (ID | NUMBER)                  { _exprDecision += _input.LT(-1).getText(); }
-                FP                             // Fecha Parêntese )
-		'faça'
+cmdEnquanto : 	'enquanto'
+                AP (ID | NUMBER) OPREL (ID | NUMBER) FP
+                'faça' 
                 ACH                            // Abre Chave {
                 {
                     // 1. Cria uma nova lista (thread) de comandos para este bloco 'enquanto'
@@ -218,8 +214,7 @@ cmdLaço : 'para'
             'passo'                       
             (v_passo_id=ID | v_passo_num=NUMBER)                      
             { _passo = $v_passo_id.text != null ? $v_passo_id.text : $v_passo_num.text; } // Usa rótulos
-            
-            DP?                            
+            DP                            
             ACH                            
             {
                 // Início da lógica da Pilha (stack)
