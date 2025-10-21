@@ -1,8 +1,10 @@
 programa
 
-  numero x;
-enquanto (x<10) faça{
-	escreva(x);
-}
+numero x[3];
+
+x[2] = 1;
+
+escreva(x[2]);
+
   
 fimprog;

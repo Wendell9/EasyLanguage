@@ -1,8 +1,10 @@
 br\edu\cefsa\compiler\parser\EasyLanguageParser$TermoContext.class
+br\edu\cefsa\compiler\abstractsyntaxtree\CommandVetor.class
 br\edu\cefsa\compiler\parser\EasyLanguageListener.class
 br\edu\cefsa\compiler\main\MainClass.class
 br\edu\cefsa\compiler\abstractsyntaxtree\CommandLeitura.class
 br\edu\cefsa\compiler\abstractsyntaxtree\CommandAtribuicao.class
+br\edu\cefsa\compiler\parser\EasyLanguageParser$Declaracao_arrayContext.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser$TipoContext.class
 br\edu\cefsa\compiler\datastructures\EasyVariable.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser$CmdContext.class
@@ -21,6 +23,7 @@ br\edu\cefsa\compiler\abstractsyntaxtree\CommandEnquanto.class
 br\edu\cefsa\compiler\exceptions\EasySemanticException.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser$DeclaravarContext.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser$CmdEnquantoContext.class
+br\edu\cefsa\compiler\parser\EasyLanguageParser$Id_ou_arrayContext.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser.class
 br\edu\cefsa\compiler\abstractsyntaxtree\CommandLaço.class
 br\edu\cefsa\compiler\parser\EasyLanguageBaseListener.class

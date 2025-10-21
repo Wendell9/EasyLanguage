@@ -6,6 +6,7 @@ D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\datastructures\EasyVariable.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandAtribuicao.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\exceptions\EasySemanticException.java
+D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandVetor.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\datastructures\EasySymbol.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\AbstractCommand.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandLaço.java

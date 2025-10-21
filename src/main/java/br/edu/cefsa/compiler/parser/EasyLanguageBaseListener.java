@@ -13,6 +13,7 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandDecisao;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandEnquanto;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
 	import java.util.ArrayList;
 	import java.util.Stack;
 
@@ -177,6 +178,18 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDeclaracao_array(EasyLanguageParser.Declaracao_arrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclaracao_array(EasyLanguageParser.Declaracao_arrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpr(EasyLanguageParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -184,6 +197,18 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr(EasyLanguageParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -13,6 +13,7 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandDecisao;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandEnquanto;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
 	import java.util.ArrayList;
 	import java.util.Stack;
 
@@ -144,6 +145,16 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 */
 	void exitCmdLaço(EasyLanguageParser.CmdLaçoContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#declaracao_array}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaracao_array(EasyLanguageParser.Declaracao_arrayContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#declaracao_array}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaracao_array(EasyLanguageParser.Declaracao_arrayContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#expr}.
 	 * @param ctx the parse tree
 	 */
@@ -153,6 +164,16 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpr(EasyLanguageParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#id_ou_array}.
+	 * @param ctx the parse tree
+	 */
+	void enterId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#id_ou_array}.
+	 * @param ctx the parse tree
+	 */
+	void exitId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#termo}.
 	 * @param ctx the parse tree

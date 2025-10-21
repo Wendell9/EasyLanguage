@@ -13,6 +13,7 @@ grammar EasyLanguage;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandDecisao;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandEnquanto;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
 	import java.util.ArrayList;
 	import java.util.Stack;
 }
@@ -51,15 +52,25 @@ grammar EasyLanguage;
 	}
 }
 
-prog	: 'programa' decl bloco 'fimprog;'
-           {  program.setVarTable(symbolTable);
-              program.setComandos(stack.pop());
-           	 
-           } 
-	;
+prog : 'programa'
+       {
+           curThread = new ArrayList<AbstractCommand>();
+           stack.push(curThread); 
+       }
+       decl 
+       bloco 
+       'fimprog;'
+       {
+           program.setVarTable(symbolTable);
+           program.setComandos(stack.pop()); 
+       }
+     ;
 		
-decl    :  (declaravar)+
-        ;
+decl    :  (declaravar | declaracao_array)+ ;
+
+TIPO_NUMERO   : 'numero';
+TIPO_TEXTO    : 'texto';
+TIPO_BOOLEANO : 'booleano';
         
         
 declaravar :  tipo ID  {
@@ -89,8 +100,9 @@ declaravar :  tipo ID  {
                SC
            ;
            
-tipo       : 'numero' { _tipo = EasyVariable.NUMBER;  }
-           | 'texto'  { _tipo = EasyVariable.TEXT;  }
+tipo       : TIPO_NUMERO { _tipo = EasyVariable.NUMBER;  }
+           | TIPO_TEXTO  { _tipo = EasyVariable.TEXT;  }
+	   | TIPO_BOOLEANO   { _tipo = EasyVariable.BOOLEANO;  }
            ;
         
 bloco	: { curThread = new ArrayList<AbstractCommand>(); 
@@ -122,29 +134,35 @@ cmdleitura	: 'leia' AP
               }   
 			;
 			
-cmdescrita	: 'escreva' 
-                 AP 
-                 ID { verificaID(_input.LT(-1).getText());
-	                  _writeID = _input.LT(-1).getText();
-                     } 
-                 FP 
-                 SC
-               {
-               	  CommandEscrita cmd = new CommandEscrita(_writeID);
-               	  stack.peek().add(cmd);
-               }
-			;
+cmdescrita
+    : 'escreva'
+      AP
+      expr
+      {
+          _writeID = _exprContent; 
+          _exprContent = "";     
+      }
+      FP
+      SC
+      {
+          CommandEscrita cmd = new CommandEscrita(_writeID);
+          stack.peek().add(cmd);
+      }
+    ;
 			
-cmdattrib	:  ID { verificaID(_input.LT(-1).getText());
-                    _exprID = _input.LT(-1).getText();
-                   } 
-               ATTR { _exprContent = ""; } 
-               expr 
-               SC
-               {
-               	 CommandAtribuicao cmd = new CommandAtribuicao(_exprID, _exprContent);
-               	 stack.peek().add(cmd);
-               }
+cmdattrib	:  id_ou_array 
+        {
+             _exprID = _exprContent; 
+	 	_exprContent = ""; 
+        }
+      ATTR
+      expr
+      SC
+      {
+           CommandAtribuicao cmd = new CommandAtribuicao(_exprID, _exprContent);
+           stack.peek().add(cmd);
+
+      }
 			;
 			
 			
@@ -236,26 +254,79 @@ cmdLaço : 'para'
             }
         ;
 
+declaracao_array
+    : tipo 
+
+      ID
+      { _varName = _input.LT(-1).getText(); } // 2. Captura o nome do array (ex: 'x')
+
+      AC
+      NUMBER
+      {
+          int tamanho = Integer.parseInt(_input.LT(-1).getText()); // 3. Captura o tamanho (ex: 3)
+
+          if (symbolTable.exists(_varName)){
+               throw new EasySemanticException("Symbol "+_varName+" already declared");
+          }
+          
+          symbol = new EasyVariable(_varName, _tipo, null);
+          symbolTable.add(symbol); 
+          
+          String tipoJava;
+          if (_tipo == EasyVariable.NUMBER) {
+              tipoJava = "double";
+          } else if (_tipo == EasyVariable.TEXT) {
+              tipoJava = "String";
+          } else {
+              tipoJava = "Boolean";
+          }
+
+          CommandVetor cmdVetor = new CommandVetor(_varName, tipoJava, tamanho);
+          stack.peek().add(cmdVetor);
+
+      }
+      FC
+      SC
+    ;
+
 			
 expr        :  termo ( 
                         OP  { _exprContent += _input.LT(-1).getText();}
                         termo
 	             )*
+		|
+			termo  (
+				OPBOOL  { _exprContent += _input.LT(-1).getText();}
+                        termo
+	             )*
+
             ;
+
+id_ou_array : ID { verificaID(_input.LT(-1).getText()); _exprContent += _input.LT(-1).getText(); }
+      (
+          AC 
+          { _exprContent += _input.LT(-1).getText(); } 
+          expr
+          FC 
+          { _exprContent += _input.LT(-1).getText(); } 
+      )?
+    ;
 			
-termo	    : ID { verificaID(_input.LT(-1).getText());
-	               _exprContent += _input.LT(-1).getText();
-                 } 
-            | 
-              NUMBER
-              {
-              	_exprContent += _input.LT(-1).getText();
-              }
-			;
+termo : id_ou_array 
+         |
+      NUMBER
+      {
+          _exprContent += _input.LT(-1).getText();
+      }
+    ;
 			
 	
 AP	: '('
 	;
+
+AC : '[' ; 
+
+FC : ']' ; 
 	
 FP	: ')'
 	;
@@ -279,6 +350,10 @@ FCH  : '}'
      ;
 DP   : ':'
      ;
+
+OPBOOL : 'e' | 'ou' | 'nao';
+
+BOOLEANO : 'verdadeiro' | 'falso';
 	 
 	 
 OPREL : '>' | '<' | '>=' | '<=' | '==' | '!='

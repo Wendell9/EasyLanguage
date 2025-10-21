@@ -4,6 +4,7 @@ public class EasyVariable extends EasySymbol {
 
     public static final int NUMBER = 0;
     public static final int TEXT = 1;
+    public static final int BOOLEANO = 2;
 
     private int type;
     private String value;
@@ -39,8 +40,11 @@ public class EasyVariable extends EasySymbol {
         String str;
         if (type == NUMBER) {
             str = "double ";
-        } else {
+        } else if(type == TEXT) {
             str = "String ";
+        }
+        else{
+            str = "Boolean ";
         }
         return str + " " + super.name + ";";
     }
