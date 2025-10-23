@@ -23,13 +23,15 @@ public class CommandDecisao extends AbstractCommand {
             str.append(cmd.generateJavaCode());
         }
         str.append("}");
-        if (listaFalse.size() > 0) {
-            str.append("else {\n");
-            for (AbstractCommand cmd : listaFalse) {
-                str.append(cmd.generateJavaCode());
-            }
-            str.append("}\n");
+        if (listaFalse != null) {
+            if (listaFalse.size() > 0) {
+                str.append("else {\n");
+                for (AbstractCommand cmd : listaFalse) {
+                    str.append(cmd.generateJavaCode());
+                }
+                str.append("}\n");
 
+            }
         }
         return str.toString();
     }

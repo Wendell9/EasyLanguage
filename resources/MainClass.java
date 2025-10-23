@@ -2,7 +2,11 @@ import java.util.Scanner;
 public class MainClass{ 
  public static void main(String args[]){
    Scanner _key = new Scanner(System.in);
-double  x;
-nullx[2] = nullx[2]1;
-System.out.println(x[2]);
+Boolean  x;
+String  y;
+y = "oi";
+x = true;
+if (null) {
+y= _key.nextLine();if (y!="") {
+x = false;}}
  }}

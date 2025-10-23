@@ -14,6 +14,7 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandEnquanto;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
+	import br.edu.cefsa.compiler.datastructures.EasyArray;
 	import java.util.ArrayList;
 	import java.util.Stack;
 

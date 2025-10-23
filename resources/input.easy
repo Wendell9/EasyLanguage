@@ -1,10 +1,17 @@
 programa
 
-numero x[3];
+booleano x;
+texto y;
 
-x[2] = 1;
+y = "oi";
+x = verdadeiro;
 
-escreva(x[2]);
-
-  
+se (x)
+{
+	leia(y);
+	se (y != "") 
+	{
+		x = falso;
+	}
+}
 fimprog;

@@ -19,6 +19,7 @@ br\edu\cefsa\compiler\parser\EasyLanguageParser$CmdescritaContext.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser$DeclContext.class
 br\edu\cefsa\compiler\abstractsyntaxtree\EasyProgram.class
 br\edu\cefsa\compiler\abstractsyntaxtree\CommandEscrita.class
+br\edu\cefsa\compiler\datastructures\EasyArray.class
 br\edu\cefsa\compiler\abstractsyntaxtree\CommandEnquanto.class
 br\edu\cefsa\compiler\exceptions\EasySemanticException.class
 br\edu\cefsa\compiler\parser\EasyLanguageParser$DeclaravarContext.class

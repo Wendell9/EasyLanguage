@@ -14,6 +14,7 @@ grammar EasyLanguage;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandEnquanto;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
+	import br.edu.cefsa.compiler.datastructures.EasyArray;
 	import java.util.ArrayList;
 	import java.util.Stack;
 }
@@ -137,6 +138,7 @@ cmdleitura	: 'leia' AP
 cmdescrita
     : 'escreva'
       AP
+	{ _exprContent = ""; }
       expr
       {
           _writeID = _exprContent; 
@@ -150,52 +152,55 @@ cmdescrita
       }
     ;
 			
-cmdattrib	:  id_ou_array 
-        {
-             _exprID = _exprContent; 
-	 	_exprContent = ""; 
-        }
-      ATTR
-      expr
-      SC
-      {
-           CommandAtribuicao cmd = new CommandAtribuicao(_exprID, _exprContent);
-           stack.peek().add(cmd);
-
-      }
-			;
+cmdattrib :
+    { _exprContent = ""; } // Garante que _exprContent comece vazia
+    id_ou_array
+    {
+         _exprID = _exprContent; // Pega o ID (ex: "x" ou "vetor[i]")
+         _exprContent = "";      // Zera para receber a expressão
+    }
+    ATTR
+    expr // Agora, preenche _exprContent com a expressão
+    SC
+    {
+        CommandAtribuicao cmd = new CommandAtribuicao(_exprID, _exprContent);
+        stack.peek().add(cmd);
+    }
+    ;
 			
 			
-cmdselecao  :  'se' AP
-                    ID    { _exprDecision = _input.LT(-1).getText(); }
-                    OPREL { _exprDecision += _input.LT(-1).getText(); }
-                    (ID | NUMBER) {_exprDecision += _input.LT(-1).getText(); }
-                    FP 
-                    ACH 
-                    { curThread = new ArrayList<AbstractCommand>(); 
-                        stack.push(curThread);
-                    }
-                    (cmd)+ 
-                    FCH
-                    {
-                       listaTrue = stack.pop();	
-                    } 
-                   ('senao' 
-                   	ACH
-                   	{
-                   	 	curThread = new ArrayList<AbstractCommand>();
-                   	 	stack.push(curThread);
-                   	} 
-                   	(cmd+) 
-                   	FCH
-                   	{
-                   		listaFalse = stack.pop();
-                   		CommandDecisao cmd = new CommandDecisao(_exprDecision, listaTrue, listaFalse);
-                   		stack.peek().add(cmd);
-                   	}
-                   )?
-            ;
+cmdselecao : 'se' AP
+             { _exprContent = ""; 
+	       _exprDecision = "";} 
 
+             termo 
+             
+             (OPREL { 	_exprDecision = _exprContent;
+			_exprDecision += _input.LT(-1).getText(); }
+             
+             termo { _exprDecision += _input.LT(-1).getText(); } )? // É opcional
+             
+             FP  
+             ACH 
+             { curThread = new ArrayList<AbstractCommand>(); stack.push(curThread); }
+             (cmd)+ 
+             FCH
+             { listaTrue = stack.pop(); } 
+             
+             ('senao'
+                 ACH
+                 { curThread = new ArrayList<AbstractCommand>(); stack.push(curThread); }
+                 (cmd+) 
+                 FCH
+                 {
+                     listaFalse = stack.pop();
+                 }
+             )?
+	     {       CommandDecisao cmd = new CommandDecisao(_exprDecision, listaTrue, listaFalse);
+                     stack.peek().add(cmd);
+                     // Importante: resetar _exprDecision após o uso
+                     _exprDecision = null; }
+             ;
 cmdEnquanto : 	'enquanto'
                 AP (ID | NUMBER) OPREL (ID | NUMBER) FP
                 'faça' 
@@ -222,16 +227,16 @@ cmdEnquanto : 	'enquanto'
             ;
 
 cmdLaço : 'para'
-            ID                             { _varControle = $ID.text; } // Ok: ID é o único token aqui
+            ID                             { String _varControle = $ID.text; } // Ok: ID é o único token aqui
             'de'
             (v_inicial_id=ID | v_inicial_num=NUMBER)                  
-            { _valorInicial = $v_inicial_id.text != null ? $v_inicial_id.text : $v_inicial_num.text; } // Usa rótulos
+            { String _valorInicial = $v_inicial_id.text != null ? $v_inicial_id.text : $v_inicial_num.text; } // Usa rótulos
             'ate'
             (v_final_id=ID | v_final_num=NUMBER)                      
             { _valorFinal = $v_final_id.text != null ? $v_final_id.text : $v_final_num.text; } // Usa rótulos
             'passo'                       
             (v_passo_id=ID | v_passo_num=NUMBER)                      
-            { _passo = $v_passo_id.text != null ? $v_passo_id.text : $v_passo_num.text; } // Usa rótulos
+            {String _passo = $v_passo_id.text != null ? $v_passo_id.text : $v_passo_num.text; } // Usa rótulos
             DP                            
             ACH                            
             {
@@ -255,36 +260,38 @@ cmdLaço : 'para'
         ;
 
 declaracao_array
-    : tipo 
-
-      ID
-      { _varName = _input.LT(-1).getText(); } // 2. Captura o nome do array (ex: 'x')
+    : tipo ID
+      { _varName = _input.LT(-1).getText(); } 
 
       AC
       NUMBER
       {
-          int tamanho = Integer.parseInt(_input.LT(-1).getText()); // 3. Captura o tamanho (ex: 3)
+          int tamanho = Integer.parseInt(_input.LT(-1).getText()); 
 
           if (symbolTable.exists(_varName)){
                throw new EasySemanticException("Symbol "+_varName+" already declared");
           }
           
-          symbol = new EasyVariable(_varName, _tipo, null);
+          // MUDANÇA AQUI: Usa EasyArray
+          symbol = new EasyArray(_varName, _tipo, null, tamanho); // Usa a nova classe
           symbolTable.add(symbol); 
           
+          
+          // 1. Mapeia o tipo interno (int) para a String de tipo Java
           String tipoJava;
           if (_tipo == EasyVariable.NUMBER) {
-              tipoJava = "double";
+             tipoJava = "double";
           } else if (_tipo == EasyVariable.TEXT) {
-              tipoJava = "String";
+             tipoJava = "String";
           } else {
-              tipoJava = "Boolean";
+             tipoJava = "Boolean";
           }
-
+          
+          // 2. Cria e adiciona o comando CommandVetor
           CommandVetor cmdVetor = new CommandVetor(_varName, tipoJava, tamanho);
-          stack.peek().add(cmdVetor);
+          stack.peek().add(cmdVetor); // <--- AGORA DENTRO DO BLOCO DE AÇÃO!
 
-      }
+      } // FECHA O BLOCO DE AÇÃO DEPOIS DE TUDO SER PROCESSADO!
       FC
       SC
     ;
@@ -299,22 +306,50 @@ expr        :  termo (
 				OPBOOL  { _exprContent += _input.LT(-1).getText();}
                         termo
 	             )*
-
+		|
+		termo(
+			OPREL { _exprContent += _input.LT(-1).getText();}
+                        termo
+	             )*
             ;
 
-id_ou_array : ID { verificaID(_input.LT(-1).getText()); _exprContent += _input.LT(-1).getText(); }
-      (
-          AC 
-          { _exprContent += _input.LT(-1).getText(); } 
-          expr
-          FC 
-          { _exprContent += _input.LT(-1).getText(); } 
-      )?
-    ;
+id_ou_array : ID {
+    // 1. Pega o símbolo da tabela
+    EasySymbol s = symbolTable.get(_input.LT(-1).getText());
+    if (s == null) {
+        throw new EasySemanticException("Symbol " + _input.LT(-1).getText() + " not declared");
+    }
+    
+    // ARMAZENA O NOME DO ID PARA USO POSTERIOR:
+    String _currentID = _input.LT(-1).getText();
+    
+    _exprContent += _input.LT(-1).getText(); 
+}
+(
+    AC { 
+        _exprContent += _input.LT(-1).getText();
+        
+        // USA A VARIÁVEL ARMAZENADA:
+        s = symbolTable.get(_currentID); 
+        if (!(s instanceof EasyArray)) {
+            throw new EasySemanticException("Symbol " + _currentID + " is not an array and cannot be indexed.");
+        }
+    } 
+    expr
+    FC { _exprContent += _input.LT(-1).getText(); } 
+)?
+;
 			
 termo : id_ou_array 
-         |
-      NUMBER
+      | NUMBER
+      {
+          _exprContent += _input.LT(-1).getText();
+      }
+      | STRING_LITERAL 
+      {
+          _exprContent += _input.LT(-1).getText();
+      }
+	| BOOLEANO 
       {
           _exprContent += _input.LT(-1).getText();
       }
@@ -352,6 +387,8 @@ DP   : ':'
      ;
 
 OPBOOL : 'e' | 'ou' | 'nao';
+
+STRING_LITERAL : '"' (~'"')* '"' ;
 
 BOOLEANO : 'verdadeiro' | 'falso';
 	 

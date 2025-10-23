@@ -6,7 +6,7 @@ public class EasyVariable extends EasySymbol {
     public static final int TEXT = 1;
     public static final int BOOLEANO = 2;
 
-    private int type;
+    int type;
     private String value;
 
     public EasyVariable(String name, int type, String value) {
@@ -35,7 +35,8 @@ public class EasyVariable extends EasySymbol {
     public String toString() {
         return "EasyVariable [name=" + name + ", type=" + type + ", value=" + value + "]";
     }
-
+    
+    @Override
     public String generateJavaCode() {
         String str;
         if (type == NUMBER) {

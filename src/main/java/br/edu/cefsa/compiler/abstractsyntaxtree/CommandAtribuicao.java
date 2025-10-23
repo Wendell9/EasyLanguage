@@ -7,7 +7,15 @@ public class CommandAtribuicao extends AbstractCommand {
 
     public CommandAtribuicao(String id, String expr) {
         this.id = id;
-        this.expr = expr;
+        if ("verdadeiro".equals(expr)) {
+            this.expr = "true";
+        }
+        else if ("falso".equals(expr)){
+            this.expr = "false";
+        }
+        else{
+            this.expr = expr;
+        }
     }
 
     @Override
