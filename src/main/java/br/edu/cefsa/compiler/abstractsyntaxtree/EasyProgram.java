@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import br.edu.cefsa.compiler.datastructures.EasySymbol;
 import br.edu.cefsa.compiler.datastructures.EasySymbolTable;
+import br.edu.cefsa.compiler.datastructures.EasyVariable;
 
 public class EasyProgram {
 
@@ -17,16 +18,24 @@ public class EasyProgram {
         StringBuilder str = new StringBuilder();
         str.append("import java.util.Scanner;\n");
         str.append("public class MainClass{ \n");
-        str.append(" public static void main(String args[]){\n ");
-        str.append("  Scanner _key = new Scanner(System.in);\n");
-        for (EasySymbol symbol : varTable.getAll()) {
-            str.append(symbol.generateJavaCode() + "\n");
+        for (AbstractCommand cmd : this.getComandos()) {
+            if (cmd instanceof CommandFuncao) {
+                str.append(cmd.generateJavaCode());
+            }
         }
-        for (AbstractCommand command : comandos) {
-            str.append(command.generateJavaCode() + "\n");
+
+        str.append("\tpublic static void main(String args[]) {\n");
+
+
+
+        for (AbstractCommand cmd : this.getComandos()) {
+            if (!(cmd instanceof CommandFuncao)) {
+                // O \t\t garante a indentação correta dentro do main
+                str.append("\t\t").append(cmd.generateJavaCode()).append("\n");
+            }
         }
-        str.append(" }");
-        str.append("}");
+        str.append("\t}\n");
+        str.append("}\n");
 
         try {
             FileWriter fr = new FileWriter(new File("./resources/MainClass.java"));

@@ -15,6 +15,9 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
 	import br.edu.cefsa.compiler.datastructures.EasyArray;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandFuncao;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandRetorno;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandBlocoMain;
 	import java.util.ArrayList;
 	import java.util.Stack;
 
@@ -36,6 +39,66 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 */
 	void exitProg(EasyLanguageParser.ProgContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#rotinas}.
+	 * @param ctx the parse tree
+	 */
+	void enterRotinas(EasyLanguageParser.RotinasContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#rotinas}.
+	 * @param ctx the parse tree
+	 */
+	void exitRotinas(EasyLanguageParser.RotinasContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#funcao}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncao(EasyLanguageParser.FuncaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#funcao}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncao(EasyLanguageParser.FuncaoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#param_list}.
+	 * @param ctx the parse tree
+	 */
+	void enterParam_list(EasyLanguageParser.Param_listContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#param_list}.
+	 * @param ctx the parse tree
+	 */
+	void exitParam_list(EasyLanguageParser.Param_listContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#procedimento}.
+	 * @param ctx the parse tree
+	 */
+	void enterProcedimento(EasyLanguageParser.ProcedimentoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#procedimento}.
+	 * @param ctx the parse tree
+	 */
+	void exitProcedimento(EasyLanguageParser.ProcedimentoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#bloco_funcao}.
+	 * @param ctx the parse tree
+	 */
+	void enterBloco_funcao(EasyLanguageParser.Bloco_funcaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#bloco_funcao}.
+	 * @param ctx the parse tree
+	 */
+	void exitBloco_funcao(EasyLanguageParser.Bloco_funcaoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#cmd_retorno}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmd_retorno(EasyLanguageParser.Cmd_retornoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#cmd_retorno}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmd_retorno(EasyLanguageParser.Cmd_retornoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#decl}.
 	 * @param ctx the parse tree
 	 */
@@ -55,6 +118,16 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeclaravar(EasyLanguageParser.DeclaravarContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#decl_local}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecl_local(EasyLanguageParser.Decl_localContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#decl_local}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecl_local(EasyLanguageParser.Decl_localContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#tipo}.
 	 * @param ctx the parse tree
@@ -85,6 +158,16 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmd(EasyLanguageParser.CmdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#cmd_chamada}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmd_chamada(EasyLanguageParser.Cmd_chamadaContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#cmd_chamada}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmd_chamada(EasyLanguageParser.Cmd_chamadaContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#cmdleitura}.
 	 * @param ctx the parse tree
@@ -175,6 +258,26 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#chamada_funcao}.
+	 * @param ctx the parse tree
+	 */
+	void enterChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#chamada_funcao}.
+	 * @param ctx the parse tree
+	 */
+	void exitChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#arg_list}.
+	 * @param ctx the parse tree
+	 */
+	void enterArg_list(EasyLanguageParser.Arg_listContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#arg_list}.
+	 * @param ctx the parse tree
+	 */
+	void exitArg_list(EasyLanguageParser.Arg_listContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#termo}.
 	 * @param ctx the parse tree

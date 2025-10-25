@@ -15,6 +15,9 @@ grammar EasyLanguage;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
 	import br.edu.cefsa.compiler.datastructures.EasyArray;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandFuncao;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandRetorno;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandBlocoMain;
 	import java.util.ArrayList;
 	import java.util.Stack;
 }
@@ -35,12 +38,28 @@ grammar EasyLanguage;
 	private String _exprDecision;
 	private ArrayList<AbstractCommand> listaTrue;
 	private ArrayList<AbstractCommand> listaFalse;
+	private Stack<EasySymbolTable> scopeStack = new Stack<>(); 	
+	private EasySymbolTable globalSymbolTable; 
+
+
+    public void initScope() {
+        EasySymbolTable globalTable = new EasySymbolTable();
+        scopeStack.push(globalTable);
+        this.symbolTable = globalTable;
+        this.globalSymbolTable = globalTable; // <--- Inicialização aqui
+    }
 	
-	public void verificaID(String id){
-		if (!symbolTable.exists(id)){
-			throw new EasySemanticException("Symbol "+id+" not declared");
-		}
-	}
+public void verificaID(String id){
+    for (int i = scopeStack.size() - 1; i >= 0; i--) {
+        EasySymbolTable currentScope = scopeStack.get(i);
+        if (currentScope.exists(id)){ // Se achar em qualquer escopo, está declarado
+            return; 
+        }
+    }
+    
+
+    throw new EasySemanticException("Symbol "+id+" not declared");
+}
 	
 	public void exibeComandos(){
 		for (AbstractCommand c: program.getComandos()){
@@ -51,39 +70,159 @@ grammar EasyLanguage;
 	public void generateCode(){
 		program.generateTarget();
 	}
+
+
+
+	
+	public void enterScope() {
+		EasySymbolTable newScope = new EasySymbolTable(); 
+    
+		scopeStack.push(newScope);
+    
+		this.symbolTable = newScope; 
+	}
+	public void exitScope() {
+    		if (!scopeStack.isEmpty()) {
+        		scopeStack.pop();
+    		}
+    
+    		if (!scopeStack.isEmpty()) {
+        		this.symbolTable = scopeStack.peek(); 
+    		} else {
+        		this.symbolTable = null; 
+    		}
+}
 }
 
 prog : 'programa'
        {
            curThread = new ArrayList<AbstractCommand>();
            stack.push(curThread); 
+		initScope();
        }
        decl 
+       rotinas
        bloco 
        'fimprog;'
        {
-           program.setVarTable(symbolTable);
-           program.setComandos(stack.pop()); 
+	program.setVarTable(globalSymbolTable);
+           program.setComandos(stack.pop());
        }
      ;
+
+rotinas : (funcao | procedimento)* ;
+
+funcao : FUNCAO_KW tipo nomeF=ID AP params=param_list FP ACH
+         { 
+             String nomeFuncao = $nomeF.text; // Captura o nome da função
+             
+             if (!symbolTable.exists(nomeFuncao)) {
+                 // **Você precisa definir EasyVariable.FUNCAO em EasyVariable.java**
+                 symbolTable.add(new EasyVariable(nomeFuncao, _tipo, null)); 
+             } else {
+                 throw new EasySemanticException("Função " + nomeFuncao + " já declarada.");
+             }
+             
+             enterScope(); 
+             
+             if ($params.listaRetorno != null) {
+                 for (EasySymbol p : $params.listaRetorno) {
+                    symbolTable.add(p); // Adiciona o parâmetro como variável local do escopo da função
+                 }
+             }
+
+             curThread = new ArrayList<AbstractCommand>();
+             stack.push(curThread);
+         }
+         
+         bloco_funcao
+         
+         FCH
+         
+         { 
+             
+             ArrayList<AbstractCommand> corpoComandos = stack.pop(); 
+             
+             CommandFuncao cmd = new CommandFuncao(nomeFuncao, _tipo, $params.listaRetorno, corpoComandos);
+             
+             stack.peek().add(cmd);
+             
+             exitScope(); 
+         }
+       ;
+
+param_list returns [List<EasySymbol> listaRetorno]
+@init {
+    $listaRetorno = new ArrayList<EasySymbol>(); // Inicializa a lista no início da regra
+}
+    :
+    (
+
+        tipo ID {
+            paramName = $ID.text;
+            paramSymbol = new EasyVariable(paramName, _tipo, null); 
+            $listaRetorno.add(paramSymbol);
+        }
+        
+        (VIR tipo ID {
+            // Lógica para parâmetros subsequentes
+            String paramName = $ID.text;
+            EasySymbol paramSymbol = new EasyVariable(paramName, _tipo, null);
+            $listaRetorno.add(paramSymbol);
+            // symbolTable.add(paramSymbol); 
+        })*
+    )?
+;
+
+
+procedimento : PROCEDIMENTO_KW TIPO_VOID ID AP param_list FP ACH
+               { /* Ação: Entra no escopo de procedimento */ }
+               bloco_funcao
+               FCH
+               { /* Ação: Sai do escopo, gera o CommandProcedimento */ }
+             ;
+
+bloco_funcao : 
+    decl_local 
+    (cmd | cmd_retorno)* ;
+
+cmd_retorno : RETORNO_KW 
+
+              { _exprContent = ""; } 
+
+              expr SC 
+              { 
+
+                  CommandRetorno cmd = new CommandRetorno(_exprContent); 
+                  
+
+                  stack.peek().add(cmd);
+                  
+
+                  _exprContent = "";
+                  
+
+              }
+            ;
 		
-decl    :  (declaravar | declaracao_array)+ ;
+decl    :  (declaravar | declaracao_array)* ;
 
 TIPO_NUMERO   : 'numero';
 TIPO_TEXTO    : 'texto';
 TIPO_BOOLEANO : 'booleano';
+TIPO_VOID : 'vazio';
         
         
 declaravar :  tipo ID  {
 	                  _varName = _input.LT(-1).getText();
-	                  _varValue = null;
-	                  symbol = new EasyVariable(_varName, _tipo, _varValue);
-	                  if (!symbolTable.exists(_varName)){
-	                     symbolTable.add(symbol);	
-	                  }
-	                  else{
-	                  	 throw new EasySemanticException("Symbol "+_varName+" already declared");
-	                  }
+	                  EasyVariable novoSimbolo = new EasyVariable(_varName, _tipo, _varValue);
+			  if (!symbolTable.exists(_varName)){
+                     		symbolTable.add(novoSimbolo);    
+                 		} else {
+                     		throw new EasySemanticException("Symbol "+_varName+" already declared");
+                 		}
+                 		CommandDeclaracaoLocal cmd = new CommandDeclaracaoLocal(novoSimbolo);
+                 		stack.peek().add(cmd);
                     } 
               (  VIR 
               	 ID {
@@ -100,26 +239,45 @@ declaravar :  tipo ID  {
               )* 
                SC
            ;
+
+decl_local : (declaravar | declaracao_array)* ;
            
 tipo       : TIPO_NUMERO { _tipo = EasyVariable.NUMBER;  }
            | TIPO_TEXTO  { _tipo = EasyVariable.TEXT;  }
 	   | TIPO_BOOLEANO   { _tipo = EasyVariable.BOOLEANO;  }
+	   | TIPO_VOID   { _tipo = EasyVariable.VOID;  }
            ;
-        
-bloco	: { curThread = new ArrayList<AbstractCommand>(); 
-	        stack.push(curThread);  
-          }
-          (cmd)+
-		;
-		
 
-cmd		:  cmdleitura  
+bloco	:	'bloco'
+		ACH
+		{
+		enterScope();
+		curThread = new ArrayList<AbstractCommand>();
+		stack.push(curThread);
+		}
+		decl_local
+		(cmd)*
+		FCH
+		{
+		ArrayList<AbstractCommand> corpoDoBloco = stack.pop();
+		CommandBlocoMain cmdBloco = new CommandBlocoMain(corpoDoBloco);
+		stack.peek().add(cmdBloco);
+		exitScope();
+		}
+		;
+
+cmd:  cmdleitura  
  		|  cmdescrita 
  		|  cmdattrib
  		|  cmdselecao
 		|  cmdEnquanto 
 		|  cmdLaço
+		| cmd_chamada
 		;
+
+cmd_chamada : ID AP (expr (VIR expr)*)? FP SC 
+              { /* Ação: Verifica se ID é uma função/procedimento, gera CommandChamada */ }
+            ;
 		
 cmdleitura	: 'leia' AP
                      ID { verificaID(_input.LT(-1).getText());
@@ -206,22 +364,22 @@ cmdEnquanto : 	'enquanto'
                 'faça' 
                 ACH                            // Abre Chave {
                 {
-                    // 1. Cria uma nova lista (thread) de comandos para este bloco 'enquanto'
+                   
                     curThread = new ArrayList<AbstractCommand>();
-                    // 2. Coloca a nova lista na pilha (stack) para que os comandos internos sejam adicionados a ela
+                    
                     stack.push(curThread); 
                 }
                 (cmd)+                         // Bloco de Comandos (um ou mais comandos)
                 FCH                            // Fecha Chave }
                 {
-                    // 3. Pega a lista de comandos que acabou de ser preenchida (corpo do loop)
+                    
 		    ArrayList<AbstractCommand> listaComandosDoWhile = new ArrayList<AbstractCommand>();
                     listaComandosDoWhile = stack.pop();
                     
-                    // 4. Cria a instância do CommandEnquanto com a condição e a lista de comandos
+                    
                     CommandEnquanto cmd = new CommandEnquanto(_exprDecision, listaComandosDoWhile);
                     
-                    // 5. Adiciona o CommandEnquanto à lista de comandos do contexto pai (o bloco anterior na pilha)
+                    
                     stack.peek().add(cmd);
                 }
             ;
@@ -339,6 +497,30 @@ id_ou_array : ID {
     FC { _exprContent += _input.LT(-1).getText(); } 
 )?
 ;
+
+// 1. Regra para chamada de função em EXPRESSÕES (substitui o que estava na regra termo)
+chamada_funcao : nomeF=ID AP 
+                 { 
+                    // CHAMA VERIFICAID: Deve ser feito antes da lista de argumentos
+                    verificaID($nomeF.text);
+                    
+                    // Inicia a concatenação (ID + '(')
+                    _exprContent += $nomeF.text + $AP.text; 
+                 } 
+                 
+                 args=arg_list? 
+                 
+                 FP 
+                 {
+                    // A arg_list já adicionou os argumentos a _exprContent.
+                    // Apenas adiciona o parêntese de fechamento.
+                    _exprContent += $FP.text;
+                 }
+               ;
+
+arg_list 
+    : expr (VIR expr)* // Requires at least one argument
+    ;
 			
 termo : id_ou_array 
       | NUMBER
@@ -353,7 +535,17 @@ termo : id_ou_array
       {
           _exprContent += _input.LT(-1).getText();
       }
-    ;
+	| chamada_funcao
+    ; 
+
+
+
+
+FUNCAO_KW : 'funcao'; 
+
+PROCEDIMENTO_KW : 'procedimento';
+
+RETORNO_KW : 'retorne';
 			
 	
 AP	: '('

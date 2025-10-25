@@ -9,11 +9,16 @@ D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\exceptions\EasySemanticException.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandVetor.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\datastructures\EasySymbol.java
+D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandFuncao.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\AbstractCommand.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandLaço.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\parser\EasyLanguageLexer.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\parser\EasyLanguageListener.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\EasyProgram.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\main\MainClass.java
+D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandBlocoMain.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\parser\EasyLanguageBaseListener.java
 D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandLeitura.java
+D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\datastructures\EasyTypeMapper.java
+D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandRetorno.java
+D:\FESA\7° Semestre\Compiladores\EasyLanguageFinal\EasyLanguage\src\main\java\br\edu\cefsa\compiler\abstractsyntaxtree\CommandDeclaracaoLocal.java

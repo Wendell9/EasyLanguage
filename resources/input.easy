@@ -1,17 +1,14 @@
 programa
 
-booleano x;
-texto y;
-
-y = "oi";
-x = verdadeiro;
-
-se (x)
+funcao numero retornaum()
 {
-	leia(y);
-	se (y != "") 
-	{
-		x = falso;
-	}
+	retorne 1;
+}
+
+bloco{
+numero x;
+
+x = retornaum();
+escreva(x);
 }
 fimprog;

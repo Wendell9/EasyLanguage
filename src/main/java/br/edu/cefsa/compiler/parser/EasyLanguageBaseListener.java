@@ -15,6 +15,9 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandLaço;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandVetor;
 	import br.edu.cefsa.compiler.datastructures.EasyArray;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandFuncao;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandRetorno;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandBlocoMain;
 	import java.util.ArrayList;
 	import java.util.Stack;
 
@@ -47,6 +50,78 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterRotinas(EasyLanguageParser.RotinasContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRotinas(EasyLanguageParser.RotinasContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFuncao(EasyLanguageParser.FuncaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFuncao(EasyLanguageParser.FuncaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParam_list(EasyLanguageParser.Param_listContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParam_list(EasyLanguageParser.Param_listContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProcedimento(EasyLanguageParser.ProcedimentoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProcedimento(EasyLanguageParser.ProcedimentoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBloco_funcao(EasyLanguageParser.Bloco_funcaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBloco_funcao(EasyLanguageParser.Bloco_funcaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmd_retorno(EasyLanguageParser.Cmd_retornoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmd_retorno(EasyLanguageParser.Cmd_retornoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDecl(EasyLanguageParser.DeclContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -66,6 +141,18 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDeclaravar(EasyLanguageParser.DeclaravarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDecl_local(EasyLanguageParser.Decl_localContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecl_local(EasyLanguageParser.Decl_localContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -102,6 +189,18 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmd(EasyLanguageParser.CmdContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmd_chamada(EasyLanguageParser.Cmd_chamadaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmd_chamada(EasyLanguageParser.Cmd_chamadaContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -210,6 +309,30 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArg_list(EasyLanguageParser.Arg_listContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArg_list(EasyLanguageParser.Arg_listContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

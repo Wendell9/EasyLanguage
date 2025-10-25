@@ -27,5 +27,6 @@ public class CommandAtribuicao extends AbstractCommand {
     public String toString() {
         return "CommandAtribuicao [id=" + id + ", expr=" + expr + "]";
     }
+    
 
 }
