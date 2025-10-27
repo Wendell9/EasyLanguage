@@ -12,13 +12,13 @@ import java.util.List;
  * @author guind
  */
 public class CommandLaço extends AbstractCommand {
-    
+
     private String varControle;
     private String valorInicial;
     private String valorFinal;
     private String passo;
     private List<AbstractCommand> listaComandos;
-    
+
     public CommandLaço(String varControle, String valorInicial, String valorFinal, String passo, List<AbstractCommand> listaComandos) {
         this.varControle = varControle;
         this.valorInicial = valorInicial;
@@ -26,7 +26,6 @@ public class CommandLaço extends AbstractCommand {
         this.passo = passo;
         this.listaComandos = listaComandos;
     }
-
 
     @Override
     public String generateJavaCode() {
@@ -47,6 +46,11 @@ public class CommandLaço extends AbstractCommand {
         str.append("}\n");
 
         return str.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "CommandLaço []";
     }
 
 }

@@ -259,16 +259,6 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 */
 	void exitId_ou_array(EasyLanguageParser.Id_ou_arrayContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link EasyLanguageParser#chamada_funcao}.
-	 * @param ctx the parse tree
-	 */
-	void enterChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link EasyLanguageParser#chamada_funcao}.
-	 * @param ctx the parse tree
-	 */
-	void exitChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#arg_list}.
 	 * @param ctx the parse tree
 	 */
@@ -278,6 +268,16 @@ public interface EasyLanguageListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitArg_list(EasyLanguageParser.Arg_listContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EasyLanguageParser#chamada_funcao}.
+	 * @param ctx the parse tree
+	 */
+	void enterChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EasyLanguageParser#chamada_funcao}.
+	 * @param ctx the parse tree
+	 */
+	void exitChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link EasyLanguageParser#termo}.
 	 * @param ctx the parse tree

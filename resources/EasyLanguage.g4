@@ -39,7 +39,9 @@ grammar EasyLanguage;
 	private ArrayList<AbstractCommand> listaTrue;
 	private ArrayList<AbstractCommand> listaFalse;
 	private Stack<EasySymbolTable> scopeStack = new Stack<>(); 	
-	private EasySymbolTable globalSymbolTable; 
+	private EasySymbolTable globalSymbolTable;
+	private String _funcaoNome; 
+    	private ArrayList<String> _argumentosLista;
 
 
     public void initScope() {
@@ -165,7 +167,6 @@ param_list returns [List<EasySymbol> listaRetorno]
         }
         
         (VIR tipo ID {
-            // Lógica para parâmetros subsequentes
             String paramName = $ID.text;
             EasySymbol paramSymbol = new EasyVariable(paramName, _tipo, null);
             $listaRetorno.add(paramSymbol);
@@ -275,9 +276,38 @@ cmd:  cmdleitura
 		| cmd_chamada
 		;
 
-cmd_chamada : ID AP (expr (VIR expr)*)? FP SC 
-              { /* Ação: Verifica se ID é uma função/procedimento, gera CommandChamada */ }
-            ;
+cmd_chamada
+    : ID { 
+        // Apenas para pegar o ID no início (o resto da lógica será reescrito)
+        _funcaoNome = _input.LT(-1).getText(); 
+      }
+      AP
+      { _argumentosLista = new ArrayList<String>(); } 
+      (
+          expr
+          {
+              // 3. Captura o código Java da primeira expressão (que está em _exprContent)
+              _argumentosLista.add(_exprContent);
+              _exprContent = ""; // 
+          }
+          (
+              VIR
+              expr
+              {
+                  _argumentosLista.add(_exprContent);
+                  _exprContent = ""; // Limpa _exprContent
+              }
+          )*
+      )? 
+      FP
+      SC
+      {
+          CommandChamada cmd = new CommandChamada(_funcaoNome, _argumentosLista);
+          stack.peek().add(cmd);
+          
+          _funcaoNome = null;
+      }
+    ;
 		
 cmdleitura	: 'leia' AP
                      ID { verificaID(_input.LT(-1).getText());
@@ -311,14 +341,14 @@ cmdescrita
     ;
 			
 cmdattrib :
-    { _exprContent = ""; } // Garante que _exprContent comece vazia
+    { _exprContent = ""; } 
     id_ou_array
     {
          _exprID = _exprContent; // Pega o ID (ex: "x" ou "vetor[i]")
          _exprContent = "";      // Zera para receber a expressão
     }
     ATTR
-    expr // Agora, preenche _exprContent com a expressão
+    expr
     SC
     {
         CommandAtribuicao cmd = new CommandAtribuicao(_exprID, _exprContent);
@@ -498,28 +528,50 @@ id_ou_array : ID {
 )?
 ;
 
-// 1. Regra para chamada de função em EXPRESSÕES (substitui o que estava na regra termo)
-chamada_funcao : nomeF=ID AP 
-                 { 
-                    // CHAMA VERIFICAID: Deve ser feito antes da lista de argumentos
-                    verificaID($nomeF.text);
-                    
-                    // Inicia a concatenação (ID + '(')
-                    _exprContent += $nomeF.text + $AP.text; 
-                 } 
-                 
-                 args=arg_list? 
-                 
-                 FP 
-                 {
-                    // A arg_list já adicionou os argumentos a _exprContent.
-                    // Apenas adiciona o parêntese de fechamento.
-                    _exprContent += $FP.text;
-                 }
-               ;
-
 arg_list 
     : expr (VIR expr)* // Requires at least one argument
+    ;
+    
+chamada_funcao
+    : ID { verificaID(_input.LT(-1).getText()); _funcaoNome = _input.LT(-1).getText(); }
+      AP
+      { 
+          String _exprContentSAVE = _exprContent; 
+          _exprContent = ""; // LIMPAR para a CHAMADA DE FUNÇÃO
+          
+          _argumentosLista = new ArrayList<String>(); 
+      }
+      (
+          // Inicia o argumento
+          expr 
+          {
+              _argumentosLista.add(_exprContent);
+              _exprContent = ""; // Limpa para o próximo argumento
+          }
+          (
+              VIR
+              expr
+              {
+                  _argumentosLista.add(_exprContent);
+                  _exprContent = "";
+              }
+          )*
+      )?
+      FP
+      {
+          StringBuilder sb = new StringBuilder(_funcaoNome).append("(");
+          for (int i = 0; i < _argumentosLista.size(); i++) {
+              sb.append(_argumentosLista.get(i));
+              if (i < _argumentosLista.size() - 1) {
+                  sb.append(", ");
+              }
+          }
+          sb.append(")");
+
+          _exprContent = _exprContentSAVE + sb.toString(); 
+          
+          _funcaoNome = null;
+      }
     ;
 			
 termo : id_ou_array 

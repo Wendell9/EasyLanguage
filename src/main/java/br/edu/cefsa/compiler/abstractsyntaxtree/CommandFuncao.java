@@ -29,7 +29,7 @@ public class CommandFuncao extends AbstractCommand {
 
     @Override
     public String toString() {
-        return "CommandRetorno [nome=" + nome + "]";
+        return "CommandFuncao [nome=" + nome + "]";
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CommandFuncao extends AbstractCommand {
         sb.append("(");
         for (int i = 0; i < parametros.size(); i++) {
             EasySymbol param = parametros.get(i);
-            // Mapeia o tipo EasyLanguage do parâmetro para o tipo Java
+            
             String javaParamType = EasyTypeMapper.mapTipo(((EasyVariable) param).getType());
 
             sb.append(javaParamType).append(" ").append(param.getName());

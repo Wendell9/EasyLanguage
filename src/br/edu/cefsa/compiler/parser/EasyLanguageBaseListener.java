@@ -314,18 +314,6 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterArg_list(EasyLanguageParser.Arg_listContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -333,6 +321,18 @@ public class EasyLanguageBaseListener implements EasyLanguageListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitArg_list(EasyLanguageParser.Arg_listContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChamada_funcao(EasyLanguageParser.Chamada_funcaoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

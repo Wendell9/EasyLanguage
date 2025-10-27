@@ -16,7 +16,7 @@ public class CommandEscrita extends AbstractCommand {
 
     @Override
     public String toString() {
-        return "CommandEscrita [id=" + id + "]";
+        return "CommandEscrita [id=" + id + "]\n";
     }
 
 }

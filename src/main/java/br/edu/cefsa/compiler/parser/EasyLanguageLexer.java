@@ -133,7 +133,9 @@ public class EasyLanguageLexer extends Lexer {
 		private ArrayList<AbstractCommand> listaTrue;
 		private ArrayList<AbstractCommand> listaFalse;
 		private Stack<EasySymbolTable> scopeStack = new Stack<>(); 	
-		private EasySymbolTable globalSymbolTable; 
+		private EasySymbolTable globalSymbolTable;
+		private String _funcaoNome; 
+	    	private ArrayList<String> _argumentosLista;
 
 
 	    public void initScope() {

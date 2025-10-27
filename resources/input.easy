@@ -1,14 +1,16 @@
 programa
 
-funcao numero retornaum()
+funcao soma(numero a, numero b)
 {
-	retorne 1;
+	numero resultado;
+	resultado = a + b;
+	retorne resultado;
 }
 
 bloco{
 numero x;
 
-x = retornaum();
+x = soma(1,2);
 escreva(x);
 }
 fimprog;

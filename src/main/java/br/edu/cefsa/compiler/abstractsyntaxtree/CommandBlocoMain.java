@@ -23,11 +23,15 @@ public class CommandBlocoMain extends AbstractCommand {
     public String generateJavaCode() {
         StringBuilder sb = new StringBuilder();
 
-        // 1. Gera o código para o corpo do método main (sem o cabeçalho 'public static void main')
         for (AbstractCommand cmd : comandos) {
-            // Adiciona a indentação do corpo do main e o código de cada comando
+
             sb.append("\t\t").append(cmd.generateJavaCode()).append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "CommandBlocoMain [comandos=" + comandos + "]\n";
     }
 }
