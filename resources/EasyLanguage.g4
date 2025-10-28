@@ -18,6 +18,8 @@ grammar EasyLanguage;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandFuncao;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandRetorno;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandBlocoMain;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandDeclaracaoLocal;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandChamada;
 	import java.util.ArrayList;
 	import java.util.Stack;
 }
@@ -50,7 +52,7 @@ grammar EasyLanguage;
         this.symbolTable = globalTable;
         this.globalSymbolTable = globalTable; // <--- Inicialização aqui
     }
-	
+    
 public void verificaID(String id){
     for (int i = scopeStack.size() - 1; i >= 0; i--) {
         EasySymbolTable currentScope = scopeStack.get(i);
@@ -114,12 +116,16 @@ prog : 'programa'
 
 rotinas : (funcao | procedimento)* ;
 
-funcao : FUNCAO_KW tipo nomeF=ID AP params=param_list FP ACH
+funcao : FUNCAO_KW tipo{
+        int tipo_funcao;
+        tipo_funcao = _tipo;
+}
+	nomeF=ID AP params=param_list FP ACH
          { 
+
              String nomeFuncao = $nomeF.text; // Captura o nome da função
              
              if (!symbolTable.exists(nomeFuncao)) {
-                 // **Você precisa definir EasyVariable.FUNCAO em EasyVariable.java**
                  symbolTable.add(new EasyVariable(nomeFuncao, _tipo, null)); 
              } else {
                  throw new EasySemanticException("Função " + nomeFuncao + " já declarada.");
@@ -145,7 +151,7 @@ funcao : FUNCAO_KW tipo nomeF=ID AP params=param_list FP ACH
              
              ArrayList<AbstractCommand> corpoComandos = stack.pop(); 
              
-             CommandFuncao cmd = new CommandFuncao(nomeFuncao, _tipo, $params.listaRetorno, corpoComandos);
+             CommandFuncao cmd = new CommandFuncao(nomeFuncao, tipo_funcao, $params.listaRetorno, corpoComandos);
              
              stack.peek().add(cmd);
              
@@ -161,14 +167,14 @@ param_list returns [List<EasySymbol> listaRetorno]
     (
 
         tipo ID {
-            paramName = $ID.text;
-            paramSymbol = new EasyVariable(paramName, _tipo, null); 
+            String paramName = $ID.text;
+            EasyVariable paramSymbol = new EasyVariable(paramName, _tipo, null); 
             $listaRetorno.add(paramSymbol);
         }
         
         (VIR tipo ID {
-            String paramName = $ID.text;
-            EasySymbol paramSymbol = new EasyVariable(paramName, _tipo, null);
+            paramName = $ID.text;
+            paramSymbol = new EasyVariable(paramName, _tipo, null);
             $listaRetorno.add(paramSymbol);
             // symbolTable.add(paramSymbol); 
         })*
@@ -280,6 +286,7 @@ cmd_chamada
     : ID { 
         // Apenas para pegar o ID no início (o resto da lógica será reescrito)
         _funcaoNome = _input.LT(-1).getText(); 
+        _exprContent = "";
       }
       AP
       { _argumentosLista = new ArrayList<String>(); } 
@@ -421,7 +428,7 @@ cmdLaço : 'para'
             { String _valorInicial = $v_inicial_id.text != null ? $v_inicial_id.text : $v_inicial_num.text; } // Usa rótulos
             'ate'
             (v_final_id=ID | v_final_num=NUMBER)                      
-            { _valorFinal = $v_final_id.text != null ? $v_final_id.text : $v_final_num.text; } // Usa rótulos
+            {  String _valorFinal = $v_final_id.text != null ? $v_final_id.text : $v_final_num.text; } // Usa rótulos
             'passo'                       
             (v_passo_id=ID | v_passo_num=NUMBER)                      
             {String _passo = $v_passo_id.text != null ? $v_passo_id.text : $v_passo_num.text; } // Usa rótulos

@@ -1,6 +1,10 @@
 programa
 
-funcao soma(numero a, numero b)
+funcao vazio write(texto a){
+	escreva(a);
+}
+
+funcao numero soma(numero a, numero b)
 {
 	numero resultado;
 	resultado = a + b;
@@ -11,6 +15,8 @@ bloco{
 numero x;
 
 x = soma(1,2);
+
+write("oi");
 escreva(x);
 }
 fimprog;

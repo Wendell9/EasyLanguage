@@ -18,6 +18,8 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandFuncao;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandRetorno;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandBlocoMain;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandDeclaracaoLocal;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandChamada;
 	import java.util.ArrayList;
 	import java.util.Stack;
 
@@ -144,7 +146,7 @@ public class EasyLanguageLexer extends Lexer {
 	        this.symbolTable = globalTable;
 	        this.globalSymbolTable = globalTable; // <--- Inicialização aqui
 	    }
-		
+	    
 	public void verificaID(String id){
 	    for (int i = scopeStack.size() - 1; i >= 0; i--) {
 	        EasySymbolTable currentScope = scopeStack.get(i);

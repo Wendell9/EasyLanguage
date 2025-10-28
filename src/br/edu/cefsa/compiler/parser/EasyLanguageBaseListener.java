@@ -18,6 +18,8 @@ package br.edu.cefsa.compiler.parser;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandFuncao;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandRetorno;
 	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandBlocoMain;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandDeclaracaoLocal;
+	import br.edu.cefsa.compiler.abstractsyntaxtree.CommandChamada;
 	import java.util.ArrayList;
 	import java.util.Stack;
 
